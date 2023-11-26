@@ -1,9 +1,14 @@
+import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
 import React from "react";
 
 const DashboardHome = async () => {
   return (
     <>
-      <h1>Home</h1>
+      <Breadcrumbs
+        breadcrumbs={[
+          { label: "Dashboard Home", href: "/dashboard", active: true },
+        ]}
+      />
     </>
   );
 };

@@ -33,7 +33,9 @@ const DashboardRootLayout = ({ children }) => {
         </div>
         <div className="flex h-[calc(100vh-76px)]">
           <NavLinks />
-          <div className="w-full p-4 rounded bg-slate-50">{children}</div>
+          <div className="w-full p-6 rounded bg-white overflow-scroll">
+            {children}
+          </div>
         </div>
       </main>
     </>
