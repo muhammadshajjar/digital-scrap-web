@@ -9,11 +9,13 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import { DeleteListing, UpdateListing } from "@/ui/dashboard/ListingActions";
 import ListingCard from "@/ui/dashboard/ListingCard";
+import { test } from "@/lib/firebase/firestore";
 
 export const metadata = {
   title: "Market Place",
 };
 const MarketPlace = () => {
+  // await test();
   return (
     <>
       <div className="flex justify-between items-center ">

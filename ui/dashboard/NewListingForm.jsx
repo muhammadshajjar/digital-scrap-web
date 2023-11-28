@@ -1,12 +1,29 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, Radio, Upload } from "antd";
+import { addNewListing } from "@/lib/firebase/firestore";
+
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { storage } from "@/lib/firebase/config";
 
 const NewListingForm = () => {
-  const onFinish = (values) => {
+  const [loading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const onFinish = async (values) => {
     console.log("Success:", values);
+
+    // const url = await getDownloadURL(values.pictures.file.response);
+    // console.log(url);
+
+    // try {
+    //   setIsLoading(true);
+    //   await addNewListing(values);
+    //   setIsLoading(false);
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -89,7 +106,6 @@ const NewListingForm = () => {
           },
         ]}
         className="w-[48%]"
-        initialValue="antique"
       >
         <Radio.Group size="large">
           <Radio name="scrap" value="scrap">
@@ -130,12 +146,33 @@ const NewListingForm = () => {
           listType="picture"
           size="large"
           accept=".png, .jpeg"
-          beforeUpload={() => {
-            return file;
+          // beforeUpload={() => {
+          //   return file;
+          // }}
+          customRequest={async ({ onError, onSuccess, file, onProgress }) => {
+            console.log(file);
+
+            const imagesRef = ref(storage, `images/${file.name}`);
+            const uploadTask = uploadBytesResumable(imagesRef, file);
+            console.log("Uploaded a blob or file!");
+
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                onProgress({
+                  percent:
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+                });
+              },
+              (error) => {
+                // Handle unsuccessful uploads
+                onError(error);
+              },
+              () => {
+                onSuccess(imagesRef);
+              }
+            );
           }}
-          //   customRequest={async ({ onError, onSuccess, file, onProgress }) => {
-          //     console.log(file.originFileObj);
-          //   }}
         >
           <Button icon={<UploadOutlined />}>Click to upload</Button>
         </Upload>
@@ -149,8 +186,15 @@ const NewListingForm = () => {
           className="!bg-primary-800 "
           icon={<PlusOutlined />}
         >
-          Create
+          {!loading ? "Create" : "...."}
         </Button>
+      </Form.Item>
+      <Form.Item
+        className="w-[100%] flex justify-endn "
+        name="files"
+        label="files"
+      >
+        <input type="file" />
       </Form.Item>
     </Form>
   );
