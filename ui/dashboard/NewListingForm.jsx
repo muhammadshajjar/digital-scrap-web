@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, Radio, Upload } from "antd";
@@ -8,25 +8,58 @@ import { addNewListing } from "@/lib/firebase/firestore";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/lib/firebase/config";
 
+import { useRouter } from "next/navigation";
+
 const NewListingForm = () => {
   const [loading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
+
+  const router = useRouter();
   const onFinish = async (values) => {
     console.log("Success:", values);
 
-    // const url = await getDownloadURL(values.pictures.file.response);
-    // console.log(url);
+    // check for pictures uploading status
+    try {
+      values.pictures.fileList.forEach((file) => {
+        if (file.status !== "done") {
+          throw new Error("Pictures are not uploaded yet!");
+        }
+      });
 
-    // try {
-    //   setIsLoading(true);
-    //   await addNewListing(values);
-    //   setIsLoading(false);
-    // } catch (e) {
-    //   console.log(e);
-    // }
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+      // get the downloadURL of successfull uploaded pictures
+
+      setIsLoading(true);
+      const uploadedImages = await Promise.all(
+        values.pictures.fileList.map(async (file) => {
+          const downloadURL = await getDownloadURL(file.response);
+          return downloadURL;
+        })
+      );
+
+      const newListingData = {
+        title: values.title,
+        condition: values.condition,
+        price: values.price,
+        description: values.description,
+        pictures: uploadedImages,
+        type: values.type,
+      };
+
+      console.log(newListingData);
+
+      try {
+        await addNewListing(newListingData);
+        setIsLoading(false);
+
+        router.refresh("/dashboard/listings");
+        router.push("/dashboard/listings");
+      } catch (e) {
+        console.error(e.message);
+        // Handle errors specific to addNewListing, in future show toast
+      }
+    } catch (e) {
+      console.error(e);
+      // Handle errors specific to addNewListing, in future show toast
+    }
   };
 
   return (
@@ -37,7 +70,6 @@ const NewListingForm = () => {
       }}
       labelCol={{ span: 24 }}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
       className="flex flex-wrap justify-between w-11/12 !m-auto"
     >
@@ -98,7 +130,6 @@ const NewListingForm = () => {
       <Form.Item
         label="Type"
         name="type"
-        valuePropName="checked"
         rules={[
           {
             required: true,
@@ -146,9 +177,7 @@ const NewListingForm = () => {
           listType="picture"
           size="large"
           accept=".png, .jpeg"
-          // beforeUpload={() => {
-          //   return file;
-          // }}
+          multiple
           customRequest={async ({ onError, onSuccess, file, onProgress }) => {
             console.log(file);
 
@@ -185,16 +214,10 @@ const NewListingForm = () => {
           size="large"
           className="!bg-primary-800 "
           icon={<PlusOutlined />}
+          loading={loading}
         >
-          {!loading ? "Create" : "...."}
+          Create
         </Button>
-      </Form.Item>
-      <Form.Item
-        className="w-[100%] flex justify-endn "
-        name="files"
-        label="files"
-      >
-        <input type="file" />
       </Form.Item>
     </Form>
   );

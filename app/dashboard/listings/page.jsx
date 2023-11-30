@@ -9,13 +9,15 @@ import { PlusOutlined } from "@ant-design/icons";
 
 import { DeleteListing, UpdateListing } from "@/ui/dashboard/ListingActions";
 import ListingCard from "@/ui/dashboard/ListingCard";
-import { test } from "@/lib/firebase/firestore";
+import { getAllListings, test } from "@/lib/firebase/firestore";
 
 export const metadata = {
   title: "Market Place",
 };
-const MarketPlace = () => {
-  // await test();
+const MarketPlace = async () => {
+  const listingData = await getAllListings();
+
+  console.log(listingData);
   return (
     <>
       <div className="flex justify-between items-center ">
@@ -41,9 +43,9 @@ const MarketPlace = () => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-10 mt-10 ml-auto mr-auto max-w-6xl">
-        <ListingCard />
-        <ListingCard />
-        <ListingCard />
+        {listingData?.map((listing) => (
+          <ListingCard listingData={listing} key={listing.id} />
+        ))}
       </div>
     </>
   );
