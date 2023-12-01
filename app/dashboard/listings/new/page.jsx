@@ -1,7 +1,7 @@
 import React from "react";
 
 import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
-import NewListingForm from "@/ui/dashboard/NewListingForm";
+import NewListingForm from "@/ui/dashboard/listings/NewListingForm";
 
 const NewListing = () => {
   return (

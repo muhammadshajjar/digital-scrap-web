@@ -1,6 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import { DeleteListing, UpdateListing } from "@/ui/dashboard/ListingActions";
+import {
+  DeleteListing,
+  UpdateListing,
+} from "@/ui/dashboard/listings/ListingActions";
 
 const ListingCard = ({ listingData }) => {
   const imageURL = listingData.pictures[0];

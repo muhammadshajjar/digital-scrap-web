@@ -1,33 +1,28 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
+import { UploadOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, Radio, Upload } from "antd";
-import { addNewListing } from "@/lib/firebase/firestore";
 
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/lib/firebase/config";
 
-import { useRouter } from "next/navigation";
+import { editListingAction } from "@/lib/serverActions";
 
-const NewListingForm = () => {
-  const [loading, setIsLoading] = useState(false);
+import { useTransition } from "react";
 
-  const router = useRouter();
+const EditListingForm = ({ listingData, id }) => {
+  const [isPending, startTransition] = useTransition();
+
   const onFinish = async (values) => {
-    console.log("Success:", values);
+    values.pictures.fileList.forEach((file) => {
+      if (file.status !== "done") {
+        console.error("Pictures are not uploaded yet!");
+        throw new Error("Pictures are not uploaded yet!");
+      }
+    });
 
-    // check for pictures uploading status
-    try {
-      values.pictures.fileList.forEach((file) => {
-        if (file.status !== "done") {
-          throw new Error("Pictures are not uploaded yet!");
-        }
-      });
-
-      // get the downloadURL of successfull uploaded pictures
-
-      setIsLoading(true);
+    startTransition(async () => {
       const uploadedImages = await Promise.all(
         values.pictures.fileList.map(async (file) => {
           const downloadURL = await getDownloadURL(file.response);
@@ -42,32 +37,17 @@ const NewListingForm = () => {
         description: values.description,
         pictures: uploadedImages,
         type: values.type,
+        id,
       };
-
-      console.log(newListingData);
-
-      try {
-        await addNewListing(newListingData);
-        setIsLoading(false);
-
-        router.refresh("/dashboard/listings");
-        router.push("/dashboard/listings");
-      } catch (e) {
-        console.error(e.message);
-        // Handle errors specific to addNewListing, in future show toast
-      }
-    } catch (e) {
-      console.error(e);
-      // Handle errors specific to addNewListing, in future show toast
-    }
+      editListingAction(newListingData);
+    });
   };
 
   return (
     <Form
+      // action={myAction}
       name="basic"
-      initialValues={{
-        remember: true,
-      }}
+      initialValues={listingData}
       labelCol={{ span: 24 }}
       onFinish={onFinish}
       autoComplete="off"
@@ -83,7 +63,6 @@ const NewListingForm = () => {
             message: "Please enter title!",
           },
         ]}
-        initialValue="TEST TITLE"
       >
         <Input size="large" placeholder="Enter Title" />
       </Form.Item>
@@ -181,7 +160,7 @@ const NewListingForm = () => {
           customRequest={async ({ onError, onSuccess, file, onProgress }) => {
             console.log(file);
 
-            const imagesRef = ref(storage, `images/${file.name}`);
+            const imagesRef = ref(storage, `listings/${file.name}`);
             const uploadTask = uploadBytesResumable(imagesRef, file);
             console.log("Uploaded a blob or file!");
 
@@ -213,14 +192,14 @@ const NewListingForm = () => {
           htmlType="submit"
           size="large"
           className="!bg-primary-800 "
-          icon={<PlusOutlined />}
-          loading={loading}
+          icon={<EditOutlined />}
+          loading={isPending}
         >
-          Create
+          Edit
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default NewListingForm;
+export default EditListingForm;

@@ -7,7 +7,10 @@ import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
-import { DeleteListing, UpdateListing } from "@/ui/dashboard/ListingActions";
+import {
+  DeleteListing,
+  UpdateListing,
+} from "@/ui/dashboard/listings/ListingActions";
 import ListingCard from "@/ui/dashboard/ListingCard";
 import { getAllListings, test } from "@/lib/firebase/firestore";
 
@@ -17,7 +20,6 @@ export const metadata = {
 const MarketPlace = async () => {
   const listingData = await getAllListings();
 
-  console.log(listingData);
   return (
     <>
       <div className="flex justify-between items-center ">

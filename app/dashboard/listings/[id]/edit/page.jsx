@@ -2,9 +2,12 @@ import React from "react";
 
 import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
 
-import NewListingForm from "@/ui/dashboard/NewListingForm";
+import EditListingForm from "@/ui/dashboard/listings/EditListingForm";
+import { getSpecificListing } from "@/lib/firebase/firestore";
 
-const EditListing = () => {
+const EditListing = async ({ params }) => {
+  const listingData = await getSpecificListing(params.id);
+
   return (
     <>
       <Breadcrumbs
@@ -18,7 +21,7 @@ const EditListing = () => {
         ]}
       />
       <div className=" max-w-7xl mt-12">
-        <NewListingForm />
+        <EditListingForm listingData={listingData} id={params.id} />
       </div>
     </>
   );
