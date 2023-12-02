@@ -16,7 +16,7 @@ const NewListing = () => {
           },
         ]}
       />
-      <div className=" max-w-7xl mt-12">
+      <div className="max-w-7xl mt-12 bg-500">
         <NewListingForm />
       </div>
     </>

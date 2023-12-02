@@ -22,8 +22,13 @@ export const UpdateListing = ({ id }) => {
 export const DeleteListing = ({ id }) => {
   const [isPending, startTransition] = useTransition();
   const deleteDocument = () => {
-    startTransition(() => {
-      deleteListingAction(id);
+    startTransition(async () => {
+      const result = await deleteListingAction(id);
+      if (result?.error) {
+        console.log(result.error);
+      } else {
+        console.log("Listing deleted Successfully");
+      }
     });
   };
 

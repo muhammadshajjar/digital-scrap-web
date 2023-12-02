@@ -39,7 +39,12 @@ const EditListingForm = ({ listingData, id }) => {
         type: values.type,
         id,
       };
-      editListingAction(newListingData);
+      const result = await editListingAction(newListingData);
+      if (result?.error) {
+        console.log(result);
+      } else {
+        console.log("Lisitng created Successfully!!");
+      }
     });
   };
 

@@ -1,7 +1,9 @@
 import React from "react";
 
+import { Header } from "@/ui/dashboard/Skeletons";
+
 const loading = () => {
-  return <div>market palce loading....</div>;
+  return <Header />;
 };
 
 export default loading;

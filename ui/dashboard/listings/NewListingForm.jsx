@@ -37,7 +37,12 @@ const NewListingForm = () => {
         pictures: uploadedImages,
         type: values.type,
       };
-      addNewListingAction(newListingData);
+      const result = await addNewListingAction(newListingData);
+      if (result?.error) {
+        console.log(result);
+      } else {
+        console.log("Listing added Successfully");
+      }
     });
   };
 

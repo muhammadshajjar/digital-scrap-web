@@ -22,4 +22,11 @@ module.exports = {
   },
   plugins: [],
   // important: true,
+  keyframes: {
+    shimmer: {
+      "100%": {
+        transform: "translateX(100%)",
+      },
+    },
+  },
 };
