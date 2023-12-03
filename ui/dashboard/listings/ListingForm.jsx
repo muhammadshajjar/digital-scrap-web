@@ -2,7 +2,15 @@
 import React from "react";
 
 import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, InputNumber, Radio, Upload } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Upload,
+  notification,
+} from "antd";
 
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/lib/firebase/config";
@@ -13,9 +21,13 @@ import { useTransition } from "react";
 const ListingForm = ({ listingData, id }) => {
   const [isPending, startTransition] = useTransition();
 
-  console.log(listingData);
-
   const onFinish = async (values) => {
+    if (values.pictures.event) {
+      console.error("Pictures not uploaded yet!");
+      notification.error({ message: "Pictures not uploaded yet!" });
+      return;
+    }
+
     const uploadedFiles = values.pictures?.fileList?.map((file) =>
       file.response ? file.response : file
     );
@@ -31,16 +43,18 @@ const ListingForm = ({ listingData, id }) => {
       if (listingData) {
         const result = await editListingAction({ ...newListingData, id });
         if (result?.error) {
-          console.log(result);
+          console.error(result);
+          notification.error({ message: result?.error });
         } else {
-          console.log("Lisitng created Successfully!!");
+          notification.success({ message: "Listing Edited Successfully" });
         }
       } else {
         const result = await addNewListingAction(newListingData);
         if (result?.error) {
-          console.log(result);
+          console.error(result);
+          notification.error({ message: result?.error });
         } else {
-          console.log("Listing added Successfully");
+          notification.success({ message: "Listing added Successfully" });
         }
       }
     });
@@ -185,6 +199,9 @@ const ListingForm = ({ listingData, id }) => {
               (error) => {
                 // Handle unsuccessful uploads
                 onError(error);
+                notification.error({
+                  message: error,
+                });
               },
               async () => {
                 try {
@@ -197,8 +214,14 @@ const ListingForm = ({ listingData, id }) => {
                     url: downloadURL,
                   };
                   onSuccess(picutureObj);
+                  notification.success({
+                    message: "Picture Uploaded Successfully",
+                  });
                 } catch (e) {
                   console.error("Error getting download URL:", e);
+                  notification.error({
+                    message: e,
+                  });
                 }
               }
             );

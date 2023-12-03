@@ -18,7 +18,7 @@ const AllListings = async () => {
       </div>
 
       {facilitiesData.length === 0 && (
-        <Empty description={<span>No Listing Found!</span>} />
+        <Empty description={<span>No Facility Found!</span>} />
       )}
     </>
   );

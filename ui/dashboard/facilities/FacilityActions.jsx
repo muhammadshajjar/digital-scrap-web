@@ -4,7 +4,7 @@ import React from "react";
 
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-import { Button } from "antd";
+import { Button, notification } from "antd";
 
 import { useTransition } from "react";
 import { deleteFacilityAction } from "@/lib/serverActions";
@@ -26,9 +26,12 @@ export const DeleteFacility = ({ id }) => {
     startTransition(async () => {
       const result = await deleteFacilityAction(id);
       if (result?.error) {
-        console.log(result.error);
+        console.error(result.error);
+        notification.error({ message: result?.error });
       } else {
-        console.log("Facility deleted Successfully");
+        notification.success({
+          message: "Facility Deleted Successfully",
+        });
       }
     });
   };

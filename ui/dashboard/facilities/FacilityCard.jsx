@@ -14,10 +14,10 @@ const FacilityCard = ({ facilityData }) => {
   const imageURL = facilityData?.pictures[0]?.url;
 
   return (
-    <div className="bg-secondary-200 max-w-[355px] p-4 rounded-2xl">
+    <div className="bg-secondary-200 w-[355px] p-4 rounded-2xl">
       <Image
         src={imageURL}
-        width={300}
+        width={355}
         height={120}
         alt="Listing picture"
         className="rounded-2xl h-52 bg-white w-full "

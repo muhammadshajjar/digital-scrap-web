@@ -2,7 +2,15 @@
 import React, { useState } from "react";
 
 import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Form, Input, InputNumber, Upload, Select } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Upload,
+  Select,
+  notification,
+} from "antd";
 
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/lib/firebase/config";
@@ -17,6 +25,11 @@ const FacilityFrom = ({ facilityData, id }) => {
   const [isPending, startTransition] = useTransition();
 
   const onFinish = async (values) => {
+    if (values.pictures.event) {
+      console.error("Pictures not uploaded yet!");
+      notification.error({ message: "Pictures not uploaded yet!" });
+      return;
+    }
     const uploadedFiles = values.pictures?.fileList?.map((file) =>
       file.response ? file.response : file
     );
@@ -38,16 +51,21 @@ const FacilityFrom = ({ facilityData, id }) => {
       if (facilityData) {
         const result = await editFacilityAction({ ...newFacilityData, id });
         if (result?.error) {
-          console.log(result);
+          console.error(result);
+          notification.error({ message: result?.error });
         } else {
-          console.log("Facility edited Successfully");
+          notification.success({
+            message: "Facility Edited Successfully",
+          });
         }
       } else {
         const result = await addNewFacilityAction(newFacilityData);
         if (result?.error) {
-          console.log(result);
+          console.error(result);
+          notification.error({ message: result?.error });
         } else {
           console.log("Facility added Successfully");
+          notification.success({ message: "Facility added Successfully" });
         }
       }
     });
@@ -263,7 +281,6 @@ const FacilityFrom = ({ facilityData, id }) => {
           customRequest={async ({ onError, onSuccess, file, onProgress }) => {
             const imagesRef = ref(storage, `facilities/${file.name}`);
             const uploadTask = uploadBytesResumable(imagesRef, file);
-            console.log("Uploaded a blob or file!");
 
             uploadTask.on(
               "state_changed",
@@ -276,10 +293,12 @@ const FacilityFrom = ({ facilityData, id }) => {
               (error) => {
                 // Handle unsuccessful uploads
                 onError(error);
+                notification.error({
+                  message: error,
+                });
               },
               async () => {
                 try {
-                  console.log("Image uploaded Successfully");
                   const downloadURL = await getDownloadURL(imagesRef);
                   const picutureObj = {
                     uid: file.uid,
@@ -288,8 +307,14 @@ const FacilityFrom = ({ facilityData, id }) => {
                     url: downloadURL,
                   };
                   onSuccess(picutureObj);
+                  notification.success({
+                    message: "Picture Uploaded Successfully",
+                  });
                 } catch (e) {
                   console.error("Error getting download URL:", e);
+                  notification.error({
+                    message: e,
+                  });
                 }
               }
             );
