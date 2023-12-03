@@ -32,12 +32,11 @@ const FacilityFrom = ({ facilityData, id }) => {
       city: values.city,
       address: values.address,
       pictures: uploadedFiles,
-      id,
     };
 
     startTransition(async () => {
       if (facilityData) {
-        const result = await editFacilityAction(newFacilityData);
+        const result = await editFacilityAction({ ...newFacilityData, id });
         if (result?.error) {
           console.log(result);
         } else {

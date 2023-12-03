@@ -1,7 +1,8 @@
 import React from "react";
 
 import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
-import NewListingForm from "@/ui/dashboard/listings/NewListingForm";
+
+import ListingForm from "@/ui/dashboard/listings/ListingForm";
 
 const NewListing = () => {
   return (
@@ -17,7 +18,7 @@ const NewListing = () => {
         ]}
       />
       <div className="max-w-7xl mt-12 bg-500">
-        <NewListingForm />
+        <ListingForm />
       </div>
     </>
   );

@@ -6,7 +6,7 @@ import {
 } from "@/ui/dashboard/listings/ListingActions";
 
 const ListingCard = ({ listingData }) => {
-  const imageURL = listingData.pictures[0];
+  const imageURL = listingData?.pictures[0]?.url;
 
   return (
     <div className="bg-secondary-200 max-w-fit p-4 rounded-2xl">

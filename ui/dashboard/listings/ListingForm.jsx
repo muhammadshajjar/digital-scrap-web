@@ -7,51 +7,49 @@ import { Button, Form, Input, InputNumber, Radio, Upload } from "antd";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/lib/firebase/config";
 
-import { addNewListingAction } from "@/lib/serverActions";
+import { addNewListingAction, editListingAction } from "@/lib/serverActions";
 
 import { useTransition } from "react";
-const NewListingForm = () => {
+const ListingForm = ({ listingData, id }) => {
   const [isPending, startTransition] = useTransition();
 
+  console.log(listingData);
+
   const onFinish = async (values) => {
-    values.pictures.fileList.forEach((file) => {
-      if (file.status !== "done") {
-        console.error("Pictures are not uploaded yet!");
-        throw new Error("Pictures are not uploaded yet!");
-      }
-    });
-
+    const uploadedFiles = values.pictures?.fileList?.map((file) =>
+      file.response ? file.response : file
+    );
+    const newListingData = {
+      title: values.title,
+      condition: values.condition,
+      price: values.price,
+      description: values.description,
+      pictures: uploadedFiles,
+      type: values.type,
+    };
     startTransition(async () => {
-      const uploadedImages = await Promise.all(
-        values.pictures.fileList.map(async (file) => {
-          const downloadURL = await getDownloadURL(file.response);
-          return downloadURL;
-        })
-      );
-
-      const newListingData = {
-        title: values.title,
-        condition: values.condition,
-        price: values.price,
-        description: values.description,
-        pictures: uploadedImages,
-        type: values.type,
-      };
-      const result = await addNewListingAction(newListingData);
-      if (result?.error) {
-        console.log(result);
+      if (listingData) {
+        const result = await editListingAction({ ...newListingData, id });
+        if (result?.error) {
+          console.log(result);
+        } else {
+          console.log("Lisitng created Successfully!!");
+        }
       } else {
-        console.log("Listing added Successfully");
+        const result = await addNewListingAction(newListingData);
+        if (result?.error) {
+          console.log(result);
+        } else {
+          console.log("Listing added Successfully");
+        }
       }
     });
   };
 
   return (
     <Form
+      initialValues={listingData}
       name="basic"
-      initialValues={{
-        remember: true,
-      }}
       labelCol={{ span: 24 }}
       onFinish={onFinish}
       autoComplete="off"
@@ -148,14 +146,24 @@ const NewListingForm = () => {
         name="pictures"
         label="Pictures"
         rules={[
-          {
-            required: true,
-            message: "Please upload at least one picture!",
-          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              const fileList = getFieldValue("pictures");
+
+              if (
+                (fileList && fileList.length > 0) ||
+                (fileList.fileList && fileList.fileList.length > 0)
+              ) {
+                return Promise.resolve();
+              }
+              return Promise.reject("Please upload at least one picture!");
+            },
+          }),
         ]}
         className="w-[100%]"
       >
         <Upload
+          defaultFileList={listingData?.pictures}
           name="logo"
           listType="picture"
           size="large"
@@ -178,8 +186,20 @@ const NewListingForm = () => {
                 // Handle unsuccessful uploads
                 onError(error);
               },
-              () => {
-                onSuccess(imagesRef);
+              async () => {
+                try {
+                  console.log("Image uploaded Successfully");
+                  const downloadURL = await getDownloadURL(imagesRef);
+                  const picutureObj = {
+                    uid: file.uid,
+                    name: file.name,
+                    status: "done",
+                    url: downloadURL,
+                  };
+                  onSuccess(picutureObj);
+                } catch (e) {
+                  console.error("Error getting download URL:", e);
+                }
               }
             );
           }}
@@ -197,11 +217,11 @@ const NewListingForm = () => {
           icon={<PlusOutlined />}
           loading={isPending}
         >
-          Create
+          {listingData ? "Edit" : "Create"}
         </Button>
       </Form.Item>
     </Form>
   );
 };
 
-export default NewListingForm;
+export default ListingForm;
