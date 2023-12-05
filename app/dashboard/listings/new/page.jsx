@@ -12,7 +12,7 @@ const NewListing = () => {
           { label: "Listings", href: "/dashboard/listings" },
           {
             label: "Create new Listing",
-            href: "/dashboard/listings/new-listing",
+            href: "/dashboard/listings/new",
             active: true,
           },
         ]}
