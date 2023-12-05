@@ -5,8 +5,10 @@ const SubCategoryBox = ({ data }) => {
     <div className="bg-secondary-200 w-56 p-4 rounded">
       <p className="font-semibold text-lg">{data?.name}</p>
       <div className="flex items-baseline">
-        <p className="text-primary-800 font-bold text-lg">Rs {data?.price}</p>
-        <span className="text-[#858585] text-sm font-bold">/KG</span>
+        <p className="text-primary-800 font-semibold text-lg">
+          Rs {data?.price}
+        </p>
+        <span className="text-[#858585] text-sm font-medium">/KG</span>
       </div>
     </div>
   );

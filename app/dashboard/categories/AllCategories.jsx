@@ -1,22 +1,25 @@
 "use client";
-
 import { useState } from "react";
-import { Divider, Button, Modal, Form, Input, InputNumber } from "antd";
+import { Divider, Button, Form, notification } from "antd";
 
 import CategoryBox from "@/ui/categories/CategoryBox";
 import SubCategoryBox from "@/ui/categories/SubCategoryBox";
-
-import { PlusOutlined, CloseOutlined } from "@ant-design/icons";
+import NewCategoryModal from "@/ui/categories/NewCategoryModal";
 import { CATEGORIESDATA } from "@/lib/Categories";
 
-const AllCategories = ({ categoriesData }) => {
+import { PlusOutlined } from "@ant-design/icons";
+
+import { addNewSubCategory } from "@/lib/serverActions";
+
+import { useTransition } from "react";
+
+const AllCategories = ({ subCategoriesData }) => {
   const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState("Content of the modal");
+  const [isPending, startTransition] = useTransition();
   const [form] = Form.useForm();
 
   const [selectedCategoryId, setSelectedCategoryID] = useState(
-    categoriesData[0]?.id
+    subCategoriesData[0]?.id
   );
 
   const categorySelectionHandler = (id) => {
@@ -24,43 +27,45 @@ const AllCategories = ({ categoriesData }) => {
   };
 
   // Filtered category JSX
-
-  const filtereCategoryContent = categoriesData
+  const filtereCategoryContent = subCategoriesData
     .filter((category) => category.id === selectedCategoryId)[0]
-    ?.subcategories.map((data) => <SubCategoryBox data={data} />);
+    ?.subcategories.map((data) => (
+      <SubCategoryBox data={data} key={Math.random().toString()} />
+    ));
 
-  //Below is the code for modal and handling the category..
+  //Below is the code for modal and handling the new category.
 
   const showModal = () => {
     setOpen(true);
   };
-  const handleOk = () => {
-    console.log("Selected sub category ID is :" + selectedCategoryId);
 
-    form
-      .validateFields()
-      .then((values) => {
-        console.log("Received values:", values);
-        setModalText("ADD subcategory to DB HERE..");
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
 
-        // setConfirmLoading(true);
-        // setTimeout(() => {
-        //   setOpen(false);
-        //   setConfirmLoading(false);
-        // }, 2000);
-      })
-      .catch((errorInfo) => {
-        console.log("Validation failed:", errorInfo);
+      startTransition(async () => {
+        const result = await addNewSubCategory(values, selectedCategoryId);
+        if (result?.error) {
+          console.error(result);
+          notification.error({ message: result?.error });
+        } else {
+          notification.success({ message: "Sub Category Added Successfully" });
+          setOpen(false);
+        }
       });
+      form.resetFields();
+    } catch (errorInfo) {
+      console.error("Validation failed:", errorInfo);
+      notification.error({ message: errorInfo });
+    }
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
   return (
     <>
-      <div className="flex gap-14 flex-wrap mb-10">
+      <div className="flex gap-14 flex-wrap mb-10 mt-8">
         {CATEGORIESDATA.map((category) => (
           <CategoryBox
             key={category.id}
@@ -82,59 +87,16 @@ const AllCategories = ({ categoriesData }) => {
           className="!bg-primary-800 "
           icon={<PlusOutlined />}
           onClick={showModal}
-          // loading={isPending}
         >
           Add
         </Button>
-        <Modal
-          title={`Add new item `}
-          open={open}
-          onOk={handleOk}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancel}
-          closeIcon={<CloseOutlined />}
-        >
-          <Form
-            name="basic"
-            labelCol={{ span: 24 }}
-            autoComplete="off"
-            className="flex flex-wrap justify-between w-11/12 !m-auto"
-            form={form} // Add this line
-          >
-            <Form.Item
-              className="w-[100%]"
-              label="Name"
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter name!",
-                },
-              ]}
-            >
-              <Input size="large" placeholder="Enter name" />
-            </Form.Item>
-
-            <Form.Item
-              className="w-[100%]"
-              label="Price"
-              name="price"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter the price!",
-                },
-              ]}
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                size="large"
-                placeholder="Enter Pirce /kg "
-                min={1}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
+        <NewCategoryModal
+          onOpen={open}
+          onHandleOk={handleOk}
+          onHandleCancel={handleCancel}
+          isPending={isPending}
+          form={form}
+        />
       </div>
     </>
   );

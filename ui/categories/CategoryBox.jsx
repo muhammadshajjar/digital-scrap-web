@@ -1,8 +1,6 @@
 import clsx from "clsx";
 import React from "react";
 
-import { GiMetalBar } from "react-icons/gi";
-
 const CategoryBox = ({ category, onCategorySelection, selectedId }) => {
   const listingClickHandler = () => {
     onCategorySelection(category?.id);
@@ -18,7 +16,14 @@ const CategoryBox = ({ category, onCategorySelection, selectedId }) => {
       <div className="bg-black rounded-3xl h-8 w-8 flex justify-center items-center">
         <category.icon style={{ color: "white", fontSize: "18px" }} />
       </div>
-      <p className="ml-2 font-semibold ">{category?.name}</p>
+      <p
+        className={clsx(
+          "ml-2 font-semibold",
+          selectedId === category?.id && "text-white"
+        )}
+      >
+        {category?.name}
+      </p>
     </div>
   );
 };

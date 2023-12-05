@@ -94,3 +94,25 @@ export const ListingForm = () => {
     </div>
   );
 };
+
+export const Categories = () => {
+  return (
+    <>
+      <div className="flex gap-14 flex-wrap mb-16 mt-12  ">
+        <CategoriesCard />
+        <CategoriesCard />
+        <CategoriesCard />
+        <CategoriesCard />
+        <CategoriesCard />
+      </div>
+      <Skeleton active />
+    </>
+  );
+};
+export const CategoriesCard = () => {
+  return (
+    <div className="w-40">
+      <Skeleton.Button active size="large" shape="default" block />
+    </div>
+  );
+};
