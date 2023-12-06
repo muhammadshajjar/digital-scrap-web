@@ -12,4 +12,6 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+// Add the next-remove-imports configuration
+const removeImports = require("next-remove-imports")();
+module.exports = removeImports(nextConfig);
