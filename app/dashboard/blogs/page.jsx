@@ -1,7 +1,4 @@
-import { getAllBlogs } from "@/lib/firebase/firestore";
-
-import BlogsPreview from "@/ui/blogs/BlogsPreview";
-import React from "react";
+import React, { Suspense } from "react";
 
 import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
 import Link from "next/link";
@@ -9,15 +6,15 @@ import Link from "next/link";
 import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
+import { BlogsCard } from "@/ui/dashboard/Skeletons";
+import AllBlogs from "./AllBlogs";
+
 export const metadata = {
   title: "Blogs",
 };
 const Blogs = async () => {
-  const blogsData = await getAllBlogs();
-  console.log(blogsData);
-
   return (
-    <>
+    <div className="container">
       <div className="flex justify-between items-center ">
         <Breadcrumbs
           breadcrumbs={[
@@ -39,9 +36,10 @@ const Blogs = async () => {
           </Button>
         </Link>
       </div>
-
-      {/* <BlogsPreview blogsData={blogsData[1]?.content} /> */}
-    </>
+      <Suspense fallback={<BlogsCard />}>
+        <AllBlogs />
+      </Suspense>
+    </div>
   );
 };
 

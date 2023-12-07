@@ -1,33 +1,41 @@
 "use client";
+import { useState, useEffect } from "react";
+//MDd editor
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
-import { useState } from "react";
-import MarkdownPreview from "@uiw/react-markdown-preview";
-import "@uiw/react-markdown-preview/markdown.css";
-import { addNewBlogPost } from "@/lib/serverActions";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+import { addNewBlogPost, editBlogAction } from "@/lib/serverActions";
 
 import { UploadOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Upload, notification } from "antd";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/lib/firebase/config";
+
 import { useTransition } from "react";
-const BlogForm = () => {
+import { formateDateForBlogPost } from "@/helper/utilityFunctions";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+
+const BlogForm = ({ blogData, id }) => {
   const [value, setValue] = useState("");
   const [isPending, startTransition] = useTransition();
 
+  // prefill my editor for editing
+  useEffect(() => {
+    blogData && setValue(blogData?.content);
+  }, []);
+
   const onFinish = async (values) => {
-    console.log("This is test!.");
-    console.log(values);
-    if (values?.thumbnailpicture?.event) {
+    if (values?.thumbnail?.event) {
       console.error("Picture not uploaded yet!");
       notification.error({ message: "Picture not uploaded yet!" });
       return;
     }
 
-    const uploadedFiles = values.thumbnailpicture?.fileList?.map((file) =>
+    //reason for asumption of array of files is that upload default values accept array of files.
+
+    const uploadedFiles = values.thumbnail?.fileList?.map((file) =>
       file.response ? file.response : file
     );
 
@@ -36,21 +44,32 @@ const BlogForm = () => {
       breifintro: values.breifintro,
       content: values.content,
       thumbnail: uploadedFiles,
+      postDate: formateDateForBlogPost(new Date()),
     };
 
     startTransition(async () => {
-      const result = await addNewBlogPost(newBlogPostData);
-      if (result?.error) {
-        console.error("Something went wrong!");
-        notification.error({ message: result?.error });
+      if (blogData) {
+        const result = await editBlogAction({ ...newBlogPostData, id });
+        if (result?.error) {
+          console.error("Something went wrong!");
+          notification.error({ message: result?.error });
+        } else {
+          notification.success({ message: "Blog Edited successfully!" });
+        }
       } else {
-        notification.success({ message: "Blog created successfully!" });
+        const result = await addNewBlogPost(newBlogPostData);
+        if (result?.error) {
+          console.error("Something went wrong!");
+          notification.error({ message: result?.error });
+        } else {
+          notification.success({ message: "Blog created successfully!" });
+        }
       }
     });
   };
   return (
     <Form
-      //   initialValues={listingData}
+      initialValues={blogData}
       name="basic"
       labelCol={{ span: 24 }}
       onFinish={onFinish}
@@ -58,7 +77,7 @@ const BlogForm = () => {
       className="flex flex-wrap justify-between w-11/12 !m-auto"
     >
       <Form.Item
-        className="w-[48%]"
+        className="w-[100%]"
         label="Title"
         name="title"
         rules={[
@@ -80,11 +99,11 @@ const BlogForm = () => {
             message: "Please fill out the Breif Intro!",
           },
         ]}
-        className="w-[48%]"
+        className="w-[100%]"
       >
-        <Input
-          size="large"
-          placeholder="It should between 20-22 words that describe the blog  "
+        <Input.TextArea
+          rows={5}
+          placeholder="It should between 20-22 words that describe the blog..."
         />
       </Form.Item>
 
@@ -108,14 +127,16 @@ const BlogForm = () => {
           />
         </div>
       </Form.Item>
+
       <Form.Item
-        name="thumbnailpicture"
+        name="thumbnail"
         label="Thumbnail Picture"
         rules={[
           ({ getFieldValue }) => ({
             validator(_, value) {
-              const fileList = getFieldValue("thumbnailpicture");
+              const fileList = getFieldValue("thumbnail");
 
+              console.log(fileList);
               if (
                 (fileList && fileList.length === 1) ||
                 (fileList.fileList && fileList.fileList.length === 1)
@@ -130,8 +151,8 @@ const BlogForm = () => {
         className="w-[100%]"
       >
         <Upload
-          //   defaultFileList={listingData?.pictures}
-          name="logo"
+          defaultFileList={blogData?.thumbnail}
+          name="thumbnail"
           listType="picture"
           size="large"
           accept=".png, .jpeg"
@@ -139,7 +160,6 @@ const BlogForm = () => {
           customRequest={async ({ onError, onSuccess, file, onProgress }) => {
             const imagesRef = ref(storage, `blogs/${file.name}`);
             const uploadTask = uploadBytesResumable(imagesRef, file);
-            console.log("Uploaded a blob or file!");
 
             uploadTask.on(
               "state_changed",
@@ -158,7 +178,6 @@ const BlogForm = () => {
               },
               async () => {
                 try {
-                  console.log("Image uploaded Successfully");
                   const downloadURL = await getDownloadURL(imagesRef);
                   const picutureObj = {
                     uid: file.uid,
@@ -193,7 +212,7 @@ const BlogForm = () => {
           icon={<PlusOutlined />}
           loading={isPending}
         >
-          {"Create"}
+          {blogData ? "Edit" : "Create"}
         </Button>
       </Form.Item>
     </Form>

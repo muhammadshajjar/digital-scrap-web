@@ -116,3 +116,34 @@ export const CategoriesCard = () => {
     </div>
   );
 };
+
+export const BlogsCard = () => {
+  return (
+    <div className="flex justify-center items-center flex-col flex-wrap gap-6 mt-10">
+      <div className="flex justify-between max-w-2xl gap-4 border-[2px] border-secondary-200 rounded-md ">
+        <Skeleton.Image
+          active
+          block
+          style={{ height: "200px", width: "220px" }}
+        />
+        <Skeleton
+          active
+          block
+          style={{ width: "300px", height: "100%", padding: "10px" }}
+        />
+      </div>
+      <div className="flex justify-between max-w-2xl gap-4 border-[2px] border-secondary-200 rounded-md ">
+        <Skeleton.Image
+          active
+          block
+          style={{ height: "200px", width: "220px" }}
+        />
+        <Skeleton
+          active
+          block
+          style={{ width: "300px", height: "100%", padding: "10px" }}
+        />
+      </div>
+    </div>
+  );
+};
