@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
-import BlogForm from "@/ui/blogs/BlogForm";
+import BlogForm from "@/ui/dashboard/blogs/BlogForm";
 const CreateNewBlog = () => {
   return (
     <>

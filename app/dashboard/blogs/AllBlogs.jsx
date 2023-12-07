@@ -1,7 +1,7 @@
 import React from "react";
 import { Empty } from "antd";
 
-import BlogCard from "@/ui/blogs/BlogCard";
+import BlogCard from "@/ui/dashboard/blogs/BlogCard";
 import { getAllBlogs } from "@/lib/firebase/firestore";
 
 const AllBlogs = async () => {

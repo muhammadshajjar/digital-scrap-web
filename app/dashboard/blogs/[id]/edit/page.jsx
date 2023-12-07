@@ -1,5 +1,5 @@
 import { getSpecificBlog } from "@/lib/firebase/firestore";
-import BlogForm from "@/ui/blogs/BlogForm";
+import BlogForm from "@/ui/dashboard/blogs/BlogForm";
 import Breadcrumbs from "@/ui/dashboard/BreadCrumbs";
 
 const EditBlog = async ({ params }) => {

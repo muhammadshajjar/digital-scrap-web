@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { Divider, Button, Form, notification } from "antd";
 
-import CategoryBox from "@/ui/categories/CategoryBox";
-import SubCategoryBox from "@/ui/categories/SubCategoryBox";
-import NewCategoryModal from "@/ui/categories/NewCategoryModal";
+import CategoryBox from "@/ui/dashboard/categories/CategoryBox";
+import SubCategoryBox from "@/ui/dashboard/categories/SubCategoryBox";
+import NewCategoryModal from "@/ui/dashboard/categories/NewCategoryModal";
 import { CATEGORIESDATA } from "@/lib/Categories";
 
 import { PlusOutlined } from "@ant-design/icons";

@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { DeleteBlog, UpdateBlog } from "@/ui/blogs/BlogActions";
+import { DeleteBlog, UpdateBlog } from "@/ui/dashboard/blogs/BlogActions";
 const BlogCard = ({ blogData }) => {
   const imageURL = blogData?.thumbnail[0]?.url;
   return (
@@ -13,7 +13,7 @@ const BlogCard = ({ blogData }) => {
           width={100}
           height={35}
           alt="Blogs Thumbnail"
-          className="w-full h-full rounded"
+          className="w-full h-full rounded object-cover"
         />
       </div>
       <div className="w-[58%] py-4 px-6 flex flex-col">
