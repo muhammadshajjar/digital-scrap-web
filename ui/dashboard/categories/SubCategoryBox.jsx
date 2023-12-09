@@ -2,7 +2,7 @@ import React from "react";
 
 const SubCategoryBox = ({ data }) => {
   return (
-    <div className="bg-secondary-200 w-56 p-4 rounded">
+    <div className="bg-secondary-200 w-56 p-4 rounded h-fit">
       <p className="font-semibold text-lg">{data?.name}</p>
       <div className="flex items-baseline">
         <p className="text-primary-800 font-semibold text-lg">
