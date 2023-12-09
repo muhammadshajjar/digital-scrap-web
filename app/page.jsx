@@ -1,11 +1,10 @@
 import Link from "next/link";
 import React from "react";
-
+import Header from "@/ui/user/Header";
 const Home = () => {
   return (
     <>
-      <div> Home</div>
-      <Link href="/auth">Admin Login</Link>
+      <Header />
     </>
   );
 };
