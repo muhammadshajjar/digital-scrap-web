@@ -14,3 +14,16 @@
   font-size: 14px;
   margin-top: 3px;
 }
+
+.slick-dots-bottom {
+  bottom: -18px !important;
+}
+.slick-dots li button {
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 100% !important;
+  background-color: #949494 !important;
+}
+.slick-dots li.slick-active button {
+  background: #42a554 !important;
+}
