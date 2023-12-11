@@ -5,11 +5,7 @@ import React from "react";
 const Blogs = () => {
   return (
     <>
-      <Header />
-      <PagesBanner
-        title="Blog Detail"
-        descripton="Scrap & Stories Your Portal to Sustainability"
-      />
+      <h1>IN BLOGS</h1>
     </>
   );
 };

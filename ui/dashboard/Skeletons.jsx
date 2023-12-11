@@ -119,7 +119,7 @@ export const CategoriesCard = () => {
 
 export const BlogsCard = () => {
   return (
-    <div className="flex justify-center items-center flex-col flex-wrap gap-6 mt-10">
+    <div className="flex justify-center items-center flex-row flex-wrap gap-6 mt-10">
       <div className="flex justify-between max-w-2xl gap-4 border-[2px] border-secondary-200 rounded-md ">
         <Skeleton.Image
           active
