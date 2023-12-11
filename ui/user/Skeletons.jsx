@@ -31,3 +31,16 @@ export const ScrapList = () => {
     </div>
   );
 };
+
+export const BlogsPreview = () => {
+  return (
+    <>
+      <div>
+        <Skeleton.Button active block />
+        <Skeleton style={{ marginTop: "40px" }} block active />
+        <Skeleton style={{ marginTop: "40px" }} block active />
+        <Skeleton style={{ marginTop: "40px" }} block active />
+      </div>
+    </>
+  );
+};

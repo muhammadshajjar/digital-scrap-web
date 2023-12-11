@@ -35,7 +35,7 @@ const ReviewsCarousel = () => {
   return (
     <Carousel {...settings} className="mt-12 mb-8">
       {REVIEWS.map((review) => (
-        <ReviewCard reviewData={review} />
+        <ReviewCard key={Math.random().toString()} reviewData={review} />
       ))}
     </Carousel>
   );

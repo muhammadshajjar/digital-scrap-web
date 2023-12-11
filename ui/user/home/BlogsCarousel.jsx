@@ -30,7 +30,7 @@ const BlogsCarousel = ({ blogPosts }) => {
     <>
       <Carousel ref={slider} {...settings} className="mt-14 mb-8">
         {blogPosts.map((post) => (
-          <BlogCard blogPostData={post} />
+          <BlogCard key={post?.id} blogPostData={post} />
         ))}
       </Carousel>
       <BlogsCarouselBtns slider={slider} />

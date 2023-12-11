@@ -27,3 +27,17 @@
 .slick-dots li.slick-active button {
   background: #42a554 !important;
 }
+
+/* MdPreview styles overriding */
+.wmde-markdown li {
+  list-style-type: disc !important;
+}
+.wmde-markdown p {
+  font-size: 18px !important;
+}
+.wmde-markdown h3 {
+  font-size: 25px !important;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  font-weight: 600;
+}
