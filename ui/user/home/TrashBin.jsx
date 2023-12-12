@@ -14,7 +14,7 @@ const TrashBin = () => {
           <h2 className="text-2xl md:text-4xl font-semibold !leading-tight">
             Elevate Your Scrap Management with Innovative Integration
           </h2>
-          <p className="mt-4 mb-6">
+          <p className="mt-4 mb-6 leading-normal">
             Revolutionize your waste management with DigitalScrap's Smart Trash
             Bins. Experience the future of efficient, cost-saving, and
             eco-friendly waste collection. Make the smart choice today for a

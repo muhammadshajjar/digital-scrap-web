@@ -14,6 +14,10 @@
   font-size: 14px;
   margin-top: 3px;
 }
+.ant-collapse-header-text {
+  font-weight: 600 !important;
+  font-size: 19px !important;
+}
 
 .slick-dots-bottom {
   bottom: -18px !important;

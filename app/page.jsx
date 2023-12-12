@@ -11,6 +11,8 @@ import Footer from "@/ui/user/Footer";
 import GetAllBlogs from "./GetAllBlogs";
 
 import { Suspense } from "react";
+import Faqs from "@/ui/user/home/Faqs";
+import AppShowCase from "@/ui/user/home/AppShowCase";
 const Home = () => {
   return (
     <>
@@ -20,6 +22,8 @@ const Home = () => {
       <TrashBin />
       <Reviews />
       <Blogs />
+      <AppShowCase />
+      <Faqs />
       <Footer />
     </>
   );
