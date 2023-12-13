@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
-
-import { Button } from "antd";
+import HeroAction from "./HeroAction";
 
 const Hero = () => {
   return (
@@ -15,15 +14,7 @@ const Hero = () => {
           efficient, and transparent scrap collection. Explore, trade, and
           recycle with confidence, all in one place.
         </p>
-
-        <Button
-          type="primary"
-          shape="round"
-          size="large"
-          className="!bg-primary-800 !h-12 mb-8"
-        >
-          Download the app
-        </Button>
+        <HeroAction />
       </div>
 
       <Image
