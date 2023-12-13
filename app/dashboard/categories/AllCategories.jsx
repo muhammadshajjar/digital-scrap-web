@@ -66,14 +66,17 @@ const AllCategories = ({ subCategoriesData }) => {
   return (
     <>
       <div className="flex gap-14 flex-wrap mb-10 mt-8">
-        {CATEGORIESDATA.map((category) => (
-          <CategoryBox
-            key={category.id}
-            category={category}
-            onCategorySelection={categorySelectionHandler}
-            selectedId={selectedCategoryId}
-          />
-        ))}
+        {CATEGORIESDATA.map(
+          (category) =>
+            category.id !== "all" && (
+              <CategoryBox
+                key={category.id}
+                category={category}
+                onCategorySelection={categorySelectionHandler}
+                selectedId={selectedCategoryId}
+              />
+            )
+        )}
       </div>
       <Divider />
       <div className="flex items-center gap-10 flex-wrap mt-12">

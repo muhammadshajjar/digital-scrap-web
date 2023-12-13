@@ -13,7 +13,7 @@ const BlogCard = ({ blogData }) => {
           width={100}
           height={35}
           alt="Blogs Thumbnail"
-          className="w-full h-full rounded object-cover"
+          className="w-full h-full rounded object-cover "
         />
       </div>
       <div className="w-[58%] py-4 px-6 flex flex-col">
