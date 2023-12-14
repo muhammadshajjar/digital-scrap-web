@@ -2,14 +2,21 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Checkbox, Form, Input, notification } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 
 const AuthForm = () => {
   const router = useRouter();
   const formSubmitHandler = (values) => {
     console.log("Received values of form: ", values);
-    router.push("/dashboard");
+
+    const { username, password } = values;
+
+    if (username === "talha@test.com" && password === "123456") {
+      router.push("/dashboard");
+    } else {
+      notification.error({ message: "Invalid Credentials" });
+    }
   };
   return (
     <Form
