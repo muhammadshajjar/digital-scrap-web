@@ -2,7 +2,7 @@ const theme = {
   token: {
     fontSize: 16,
     colorPrimary: "#42A554",
-    fontFamily: "Poppins",
+    // fontFamily: "Poppins",
     borderRadius: 6,
   },
 };
