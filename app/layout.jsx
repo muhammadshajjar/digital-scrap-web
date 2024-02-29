@@ -6,6 +6,8 @@ import StyledComponentsRegistry from "@/lib/AntdRegistry";
 import { ConfigProvider } from "antd";
 import theme from "@/themeConfig";
 
+import "mapbox-gl/dist/mapbox-gl.css";
+
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
