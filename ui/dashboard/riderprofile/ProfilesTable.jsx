@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Modal, Dropdown, Image } from "antd";
+import { Table, Modal, Dropdown, Image, Spin } from "antd";
 import { IoMdMore } from "react-icons/io";
 
 const items = [
@@ -13,48 +13,9 @@ const items = [
     label: "Reject",
   },
 ];
-const ProfilesTable = () => {
+const ProfilesTable = ({ profilesData }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const dataSource = [
-    {
-      key: "1",
-      name: "Muhammad Shajjar",
-      number: "0321-2523296",
-      photoId: "Preview",
-      cnicfront: "Preview",
-      cnicback: "Preview",
-      vehicalphoto: "Preview",
-      vehicalcardfront: "Preview",
-      vehicalcardback: "Preview",
-      actions: "Click",
-    },
-    {
-      key: "2",
-      name: "Imran Zafar",
-      number: "0300-4939223",
-      photoId: "Preview",
-      cnicfront: "Preview",
-      cnicback: "Preview",
-      vehicalphoto: "Preview",
-      vehicalcardfront: "Preview",
-      vehicalcardback: "Preview",
-      actions: "Click",
-    },
-    {
-      key: "2",
-      name: "Muhammad Hammad",
-      number: "0311-2354334",
-      photoId: "Preview",
-      cnicfront: "Preview",
-      cnicback: "Preview",
-      vehicalphoto: "Preview",
-      vehicalcardfront: "Preview",
-      vehicalcardback: "Preview",
-      actions: "Click",
-    },
-  ];
 
   const columns = [
     {
@@ -73,7 +34,7 @@ const ProfilesTable = () => {
       dataIndex: "photoId",
       key: "photoId",
       render: (_, record) => (
-        <a onClick={() => handlePreviewImage("/")}>Preview</a>
+        <a onClick={() => handlePreviewImage(record?.photoId)}>Preview</a>
       ),
     },
     {
@@ -81,7 +42,7 @@ const ProfilesTable = () => {
       dataIndex: "cnicfront",
       key: "cnicfront",
       render: (_, record) => (
-        <a onClick={() => handlePreviewImage("/")}>Preview</a>
+        <a onClick={() => handlePreviewImage(record?.cnicfront)}>Preview</a>
       ),
     },
     {
@@ -89,7 +50,7 @@ const ProfilesTable = () => {
       dataIndex: "cnicback",
       key: "cnicback",
       render: (_, record) => (
-        <a onClick={() => handlePreviewImage("/i")}>Preview</a>
+        <a onClick={() => handlePreviewImage(record?.cnicback)}>Preview</a>
       ),
     },
     {
@@ -97,7 +58,7 @@ const ProfilesTable = () => {
       dataIndex: "vehicalphoto",
       key: "vehicalphoto",
       render: (_, record) => (
-        <a onClick={() => handlePreviewImage("/")}>Preview</a>
+        <a onClick={() => handlePreviewImage(record?.vehicalphoto)}>Preview</a>
       ),
     },
     {
@@ -105,7 +66,9 @@ const ProfilesTable = () => {
       dataIndex: "vehicalcardfront",
       key: "vehicalcardfront",
       render: (_, record) => (
-        <a onClick={() => handlePreviewImage("/")}>Preview</a>
+        <a onClick={() => handlePreviewImage(record?.vehicalcardfront)}>
+          Preview
+        </a>
       ),
     },
     {
@@ -113,7 +76,9 @@ const ProfilesTable = () => {
       dataIndex: "vehicalcardback",
       key: "vehicalcardback",
       render: (_, record) => (
-        <a onClick={() => handlePreviewImage("/")}>Preview</a>
+        <a onClick={() => handlePreviewImage(record?.vehicalcardback)}>
+          Preview
+        </a>
       ),
     },
     {
@@ -135,6 +100,7 @@ const ProfilesTable = () => {
   ];
 
   const handlePreviewImage = (imageSrc) => {
+    console.log(imageSrc);
     setPreviewImage(imageSrc);
     setIsModalVisible(true);
   };
@@ -147,7 +113,7 @@ const ProfilesTable = () => {
   return (
     <div className="mt-14">
       <Table
-        dataSource={dataSource}
+        dataSource={profilesData}
         columns={columns}
         size="large"
         scroll={true}
@@ -159,8 +125,18 @@ const ProfilesTable = () => {
         onCancel={handleCancel}
         footer={null}
         style={{ padding: "50px" }}
+        className="flex justify-center items-center"
       >
-        <Image src={previewImage} fallback={"/images/appshowcase.png"} />
+        <Image
+          src={previewImage}
+          height={300}
+          width={300}
+          placeholder={
+            <div className="flex justify-center items-center bg-primary-100  h-[300px] w-[300px]">
+              <Spin size="large" />
+            </div>
+          }
+        />
       </Modal>
     </div>
   );
