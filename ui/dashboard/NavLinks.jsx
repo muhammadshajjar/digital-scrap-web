@@ -33,7 +33,7 @@ const NavLinks = () => {
                 { "bg-primary-800 text-slate-50": pathname === url }
               )}
             >
-              <Link href={url}>
+              <Link href={url} prefetch={false}>
                 <div className="flex items-center align-middle justify-center sm:justify-start">
                   <LinkIcon />
                   <p className="hidden sm:block ml-2">{title}</p>
