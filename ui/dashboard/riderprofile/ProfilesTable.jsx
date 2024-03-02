@@ -1,21 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Modal, Dropdown, Image, Spin } from "antd";
+import { Table, Modal, Dropdown, Image, Spin, notification } from "antd";
 import { IoMdMore } from "react-icons/io";
+// import { riderProfileAction } from "@/lib/firebase/firestore";
 
-const items = [
-  {
-    key: "1",
-    label: "Approve",
-  },
-  {
-    key: "2",
-    label: "Reject",
-  },
-];
+import { useTransition } from "react";
+import { riderProfileAction } from "@/lib/serverActions";
+
 const ProfilesTable = ({ profilesData }) => {
   const [previewImage, setPreviewImage] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const columns = [
     {
@@ -82,13 +77,36 @@ const ProfilesTable = ({ profilesData }) => {
       ),
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+
+    {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
-      render: () => (
+      render: (text, record) => (
         <Dropdown
           menu={{
-            items,
+            items: [
+              {
+                key: "1",
+                label: (
+                  <button onClick={() => approveRecordHandler(record?.key)}>
+                    Approve
+                  </button>
+                ),
+              },
+              {
+                key: "2",
+                label: (
+                  <button onClick={() => rejectRecordHandler(record?.key)}>
+                    Reject
+                  </button>
+                ),
+              },
+            ],
           }}
         >
           <span>
@@ -99,6 +117,30 @@ const ProfilesTable = ({ profilesData }) => {
     },
   ];
 
+  const approveRecordHandler = async (id) => {
+    startTransition(async () => {
+      const result = await riderProfileAction(id, "Approved");
+      if (result?.error) {
+        notification.error({ message: result?.error });
+      } else {
+        notification.success({
+          message: "Rider Profile Approved Successfully",
+        });
+      }
+    });
+  };
+  const rejectRecordHandler = (id) => {
+    startTransition(async () => {
+      const result = await riderProfileAction(id, "Rejected");
+      if (result?.error) {
+        notification.error({ message: result?.error });
+      } else {
+        notification.success({
+          message: "Rider Profile Rejected Successfully",
+        });
+      }
+    });
+  };
   const handlePreviewImage = (imageSrc) => {
     console.log(imageSrc);
     setPreviewImage(imageSrc);
@@ -111,14 +153,21 @@ const ProfilesTable = ({ profilesData }) => {
   };
 
   return (
-    <div className="mt-14">
-      <Table
-        dataSource={profilesData}
-        columns={columns}
-        size="large"
-        scroll={true}
-        pagination={false}
-      />
+    <div className="mt-14 relative">
+      {isPending && (
+        <div className="absolute inset-0 flex justify-center items-center bg-white bg-opacity-75 z-10">
+          <Spin size="large" />
+        </div>
+      )}
+      <div className={isPending ? "opacity-50" : ""}>
+        <Table
+          dataSource={profilesData}
+          columns={columns}
+          size="large"
+          scroll={true}
+          pagination={false}
+        />
+      </div>
 
       <Modal
         open={isModalVisible}

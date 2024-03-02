@@ -1,7 +1,9 @@
+import { Header } from "@/ui/dashboard/Skeletons";
 import React from "react";
 
+
 const loading = () => {
-  return <div>rider prfile loading...</div>;
+  return   <Header />;;
 };
 
 export default loading;
