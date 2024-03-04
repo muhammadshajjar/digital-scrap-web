@@ -25,11 +25,11 @@ const AssignAreas = async () => {
         ]}
       />
 
-      <div className="flex flex-wrap gap-10 mt-8 mb-12 ml-auto mr-auto max-w-6xl">
+      <div className="flex justify-center flex-wrap gap-10 mt-8 mb-12 ml-auto mr-auto max-w-7xl">
         {profilesData
           .filter((profile) => profile.status === "Approved")
           .map((profile) => (
-            <AllotAreas key={profile.key} profileData={profile} />
+            <AllotAreas key={profile} profileData={profile} />
           ))}
       </div>
 

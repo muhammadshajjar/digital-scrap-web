@@ -47,7 +47,7 @@ const AllotAreas = ({ profileData }) => {
 
   return (
     <>
-      <div className="bg-secondary-200 pl-3 pr-12 py-3 rounded-md flex justify-between items-center w-fit gap-4 border-b-4 border-primary-800">
+      <div className="bg-secondary-200 pl-3 pr-12 py-3 rounded-md flex items-center gap-4 border-b-4 border-primary-800 w-[280px]">
         <div className="h-12 w-12 rounded-full bg-primary-800 cursor-pointer flex justify-center items-center">
           <FaRegUser className="text-slate-50 text-lg" />
         </div>
