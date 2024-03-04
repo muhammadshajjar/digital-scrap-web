@@ -21,3 +21,22 @@ export const mergeSubCategories = (CATEGORIESDATA, subCategoriesData) => {
 
   return mergedData;
 };
+
+export const convertToGeoJSON = (profilseData) => {
+  return {
+    type: "FeatureCollection",
+    features: profilseData
+      .filter((rider) => rider?.assignArea?.areaname !== " ")
+      .map((rider) => ({
+        type: "Feature",
+        properties: {
+          name: rider?.name,
+          areaName: rider?.assignArea?.areaname,
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [rider?.assignArea?.coordinates],
+        },
+      })),
+  };
+};
