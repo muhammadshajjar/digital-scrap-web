@@ -1,12 +1,31 @@
-import React from "react";
-
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import DownloadForTesting from "./DownloadForTesting";
 
 const AppShowCase = () => {
+  const [modalData, setModalData] = useState({
+    isOpen: false,
+    type: "",
+  });
+
+  const showModal = (type) => {
+    setModalData({ isOpen: true, type: type });
+  };
+
+  const handleOk = () => {
+    setModalData({ isOpen: false, type: "" });
+  };
+
+  const handleCancel = () => {
+    setModalData({ isOpen: false, type: "" });
+  };
+
+  console.log(modalData);
+
   return (
     <div className=" bg-primary-100 md:mt-[350px]">
-      <div className=" container m-auto py-16 flex justify-between relative text-center px-4 xl:text-left">
+      <div className="container m-auto py-16 flex justify-between relative text-center px-4 xl:text-left">
         <Image
           src="/images/appshowcase.png"
           height={800}
@@ -24,7 +43,10 @@ const AppShowCase = () => {
             Download our App
           </h2>
           <div className="flex xl:justify-start justify-center items-center">
-            <Link href="#">
+            <div
+              onClick={() => showModal("android")}
+              className="hover:cursor-pointer"
+            >
               <Image
                 src="/images/playstore.png"
                 height={150}
@@ -32,18 +54,33 @@ const AppShowCase = () => {
                 alt="playstore"
                 className="mr-3"
               />
-            </Link>
-            <Link href="#">
+            </div>
+            <div
+              onClick={() => showModal("ios")}
+              className="hover:cursor-pointer"
+            >
               <Image
                 src="/images/appstore.png"
                 height={150}
                 width={200}
-                alt="playstore"
+                alt="appstore"
               />
-            </Link>
+            </div>
           </div>
         </div>
       </div>
+
+      <DownloadForTesting
+        isModalOpen={modalData.isOpen}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        title={
+          modalData.type === "android"
+            ? "Download for Android"
+            : "Download for iOS"
+        }
+        type={modalData.type}
+      />
     </div>
   );
 };
