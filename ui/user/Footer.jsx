@@ -25,22 +25,38 @@ const Footer = () => {
           <div>
             <ul className="flex justify-center items-center gap-4 ">
               <li>
-                <a href="#" className="bg-primary-800 block p-3 rounded-full">
+                <a
+                  href="https://web.facebook.com/people/Digital-Scrap/61559295926965/"
+                  target="_blank"
+                  className="bg-primary-800 block p-3 rounded-full"
+                >
                   <FaFacebookF style={{ color: "white", fontSize: "20px" }} />
                 </a>
               </li>
               <li>
-                <a href="#" className="bg-primary-800 block p-3 rounded-full">
+                <a
+                  href="https://www.instagram.com/digital_scrap_pk/"
+                  target="_blank"
+                  className="bg-primary-800 block p-3 rounded-full"
+                >
                   <FaInstagram style={{ color: "white", fontSize: "20px" }} />
                 </a>
               </li>
               <li>
-                <a href="#" className="bg-primary-800 block p-3 rounded-full">
+                <a
+                  href="https://www.linkedin.com/company/digital-scrap/"
+                  target="_blank"
+                  className="bg-primary-800 block p-3 rounded-full"
+                >
                   <FaLinkedinIn style={{ color: "white", fontSize: "20px" }} />
                 </a>
               </li>
               <li>
-                <a href="#" className="bg-primary-800 block p-3 rounded-full">
+                <a
+                  href="https://twitter.com/digital_scrappk"
+                  target="_blank"
+                  className="bg-primary-800 block p-3 rounded-full"
+                >
                   <FaXTwitter style={{ color: "white", fontSize: "20px" }} />
                 </a>
               </li>
